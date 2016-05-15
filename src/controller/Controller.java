@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -58,44 +59,33 @@ public class Controller {
 	
 	@FXML
 	private void setStepResult() {
-		List<ItemTree> tempIt = h.getItemTree();
-		List<MathObject> tempMO = h.getRPN();
-		ListIterator<ItemTree> listerIt = tempIt.listIterator();
-		for(int indexOperator = 0; listerIt.hasNext(); ) {
-			TreeItem<String> ti = listerIt.next().getItem();
-			if(UnaryOperator.isUnaryOperator(ti.getValue()) ||
-					BinaryOperator.isBinaryOperator(ti.getValue())) {
-				indexOperator++;
-				if(!ti.isExpanded()) {
-					deleteElemFromRPN(indexOperator, tempMO, 
-							Decision.decisionOperator(h.getRPN(), indexOperator));
-					indexOperator--;
-				}
-			}
-		}
+		checkNoExpandedItem(h.getItemRoot());
 	}
 	
-	private void deleteElemFromRPN(int indexOperator, List<MathObject> rpn, double newOp) {
-		ListIterator<MathObject> lister = rpn.listIterator();
-		boolean arity = true;
-		while(lister.hasNext()) {
-			MathObject mo = lister.next();
-			if(UnaryOperator.isUnaryOperator(mo.getString())) { 
-				arity = true;
-				indexOperator--;
-			} else if(BinaryOperator.isBinaryOperator(mo.getString())) {
-				arity = false;
-				indexOperator--;
-			}
-			if(indexOperator == 0) {
-				lister.remove();
-				lister.remove();
-				if(!arity) {
-					lister.remove();
+	private MathObject checkNoExpandedItem(ItemTree it) {
+		MathObject mo;
+		for(int indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
+			if(it.getItem().isExpanded()) {
+				mo = checkNoExpandedItem(it.getOutput(indexOutputList));
+				if(mo != null) {
+					it.deleteOutput(indexOutputList);
+					it.setArcOutput(new ItemTree(mo), indexOutputList); 
 				}
-				lister.add(new Operand(newOp + ""));
+			} else {
+				List<MathObject> rpn = new ArrayList<>();
+				getRPNForOperator(it, rpn);
+				Decision.decisionOperator(rpn);
+				return rpn.get(0);
 			}
 		}
+		return null;
+	}
+	
+	private void getRPNForOperator(ItemTree it, List<MathObject> rpn) {
+		for(int indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
+			getRPNForOperator(it.getOutput(indexOutputList), rpn);
+		}
+		rpn.add(it.getMethObject());
 	}
 	
 	public TreeItem<String> setTreeView(ItemTree it) {

@@ -23,17 +23,16 @@ public class Decision {
 	
 	private void decision() throws Exception {
 		List<MathObject> lmo = h.getRPN();
-		decisionOperator(lmo, lmo.size());
+		decisionOperator(lmo);
 		if(lmo.size() > 1) {
 			throw new Exception("Не верно построена формула!!!");
 		}
 		result = ((Operand) lmo.get(0)).getOperand();
 	}
 	
-	public static double decisionOperator(List<MathObject> lmo, int operator) {
+	public static void decisionOperator(List<MathObject> lmo) {
 		ListIterator<MathObject> lister = lmo.listIterator();
-		int op = operator;
-		while(lister.hasNext() && op > 0) {
+		while(lister.hasNext()) {
 			MathObject mo = lister.next();
 			if(mo instanceof BinaryOperator) {
 				BinaryOperator bo = (BinaryOperator) mo;
@@ -43,17 +42,14 @@ public class Decision {
 				Operand o1 = (Operand) lister.previous();
 				lister.remove();
 				lister.add(new Operand(bo.getResult(o1.getOperand(), o2.getOperand())));
-				op--;
 			} else if(mo instanceof UnaryOperator) {
 				UnaryOperator uo = (UnaryOperator) mo;
 				lister.remove();
 				Operand o = (Operand) lister.previous();
 				lister.remove();
 				lister.add(new Operand(uo.getResult(o.getOperand())));  
-				op--;
 			}
 		}
-		return ((Operand)lister.previous()).getOperand();
 	} 
 	
 	public double getResult() {

@@ -31,7 +31,7 @@ public class History {
 		}
 		for(int indexTree = treeIt.size() - 2; indexTree >= 0 && countOperand > 0; indexTree--) {
 			if(!treeIt.get(indexTree).isHaveInputArc()) {
-				node.setArcOutput(treeIt.get(indexTree)); 
+				node.setArcOutput(treeIt.get(indexTree), 0); 
 				treeIt.get(indexTree).setInput();
 				if(countOperand--  == 1) {
 					countOperator++;
@@ -42,7 +42,8 @@ public class History {
 	}
 	
 	public ItemTree getItemRoot() {
-		return node;
+		List<ItemTree> temp = new ArrayList<>(treeIt);
+		return temp.get(temp.size() - 1);
 	}
 	
 	public int getNumberOperators() {	//???????????????

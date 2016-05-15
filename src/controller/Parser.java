@@ -1,22 +1,19 @@
 package controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
-
 import model.BinaryOperator;
 import model.Constants;
-import model.MathObject;
+import model.History;
 import model.Operand;
 import model.UnaryOperator;
 
 public class Parser {
-	private List<MathObject> rpn;
+
+	private History h;
 	private Stack<String> operators; 
-//	boolean negative = false;
 	
-	public Parser(String str) throws Exception {
-		rpn = new ArrayList<>();
+	public Parser(String str, History h) throws Exception {
+		this.h = h;
 		operators = new Stack<>();
 		operators.push("|");
 		parse(str);
@@ -31,8 +28,7 @@ public class Parser {
 			}
 			else { 
 				if(!elem.equals("")) {
-					rpn.add(new Operand(elem));
-//					negative = false;
+					h.setTreeItem(new Operand(elem));
 					elem = "";
 				}
 				indexStr = readOperand(str, indexStr);
@@ -41,7 +37,7 @@ public class Parser {
 	}
 	
 	public void setStrForParse(String str) throws Exception { 
-		rpn.clear();
+		h.clearRPN();
 		operators.clear();
 		operators.push("|");
 		parse(str);
@@ -59,7 +55,8 @@ public class Parser {
 				checkDivMultModPowOperators(Constants.DIVISION);
 				break;
 			case Constants.FACTORIAL:
-				rpn.add(new UnaryOperator(Constants.FACTORIAL));
+//				rpn.add(new UnaryOperator(Constants.FACTORIAL));
+				h.setTreeItem(new UnaryOperator(Constants.FACTORIAL));
 				break;
 			case Constants.LN:
 				operators.add(Constants.LN);
@@ -134,9 +131,7 @@ public class Parser {
 					operators.peek().equals(Constants.DIVISION) || 
 					operators.peek().equals(Constants.SQRT) || 
 					operators.peek().equals(Constants.PERCENT) ||
-					operators.peek().equals(Constants.POWER)/* || 
-					operators.peek().equals(Constants.LN) ||
-					operators.peek().equals(Constants.LOG)*/) {
+					operators.peek().equals(Constants.POWER)) {
 				operatorToRPN();
 			} else {
 				operators.add(str);
@@ -148,9 +143,9 @@ public class Parser {
 	private void operatorToRPN() {
 		if(!operators.isEmpty()) {
 			if(BinaryOperator.isBinaryOperator(operators.peek())) {
-				rpn.add(new BinaryOperator(operators.pop()));
+				h.setTreeItem(new BinaryOperator(operators.pop()));
 			} else {
-				rpn.add(new UnaryOperator(operators.pop()));
+				h.setTreeItem(new UnaryOperator(operators.pop()));
 			}
 		}
 	}
@@ -159,7 +154,7 @@ public class Parser {
 		int newIndex = -1;
 		switch(str.charAt(indexStr)) {
 			case 'e':
-				rpn.add(new Operand("2.7182"/*, false*/));
+				h.setTreeItem(new Operand("2.7182"));
 				newIndex = indexStr;
 				break;
 			case 'l':
@@ -184,9 +179,5 @@ public class Parser {
 				newIndex = indexStr;
 		}
 		return newIndex;
-	}
-	
-	public List<MathObject> getRPN() {
-		return rpn;
 	}
 }

@@ -1,11 +1,12 @@
 package controller;
 
+import java.util.List;
+
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -50,18 +51,11 @@ public class Controller {
 		
 	}
 	
-	public void setStepResult(String str) {
-		inputFieldFormula.setText(str); 
+	@FXML
+	private void setStepResult() {
+		List<ItemTree> lit = h.getItemTree();
+		
 	}
-	
-/*	public void setResult(String str) {
-		if(str != null) {
-			outputFieldResult.setText(str);
-		}
-		else {
-			outputFieldResult.setText("");
-		}
-	} */
 	
 	public TreeItem<String> setTreeView(ItemTree it) {
 		for(int indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
@@ -74,7 +68,8 @@ public class Controller {
 	private void clearPress() {
 		inputFieldFormula.setText("");
 		outputFieldResult.setText("");
-//		treeView.
+		treeView.setRoot(null);
+		
 	}
 
 	@FXML 
@@ -111,17 +106,17 @@ public class Controller {
 	private void equelsPress() {
 		try {
 			if(p == null) {
-				p = new Parser(inputFieldFormula.getText());
+				p = new Parser(inputFieldFormula.getText(), h);
 			} else {
 				p.setStrForParse(inputFieldFormula.getText());
 			}
 			if(d == null) {
-				d = new Decision(p.getRPN(), h);
+				d = new Decision(h);
 			} else {
-				d.setRPN(p.getRPN()); 
+				d.setRPN(); 
 			}
 			outputFieldResult.setText(d.getResult() + "");  
-			TreeItem<String> root = setTreeView(h.getItemTree());
+			TreeItem<String> root = setTreeView(h.getItemRoot());
 			root.setExpanded(true);
 			treeView.setRoot(root); 
 		} catch (Exception e) {
@@ -225,7 +220,7 @@ public class Controller {
 				break;
 			case "8":
 				if(e.isShiftDown()) {
-					addText(Constants.POWER);
+					addText(Constants.MULTIPLICATION);
 				} else {
 					addText("8");
 				}

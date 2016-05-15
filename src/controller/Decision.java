@@ -9,22 +9,22 @@ import model.Operand;
 import model.UnaryOperator;
 
 public class Decision {
-	private List<MathObject> rpn;
 	private double result;
 	private History h;
 	
-	public Decision(List<MathObject> rpn, History h) throws Exception {
+	public Decision(History h) throws Exception {
 		this.h = h;
-		setRPN(rpn);
+		setRPN();
 	}
 	
-	public void setRPN(List<MathObject> rpn) throws Exception {
-		this.rpn = rpn;
+	public void setRPN() throws Exception {
 		decision();
 	}
 	
 	private void decision() throws Exception {
-		ListIterator<MathObject> lister = rpn.listIterator();
+		List<MathObject> lmo = h.getRPN();
+		result = decisionOperator(lmo, lmo.size());
+/*		ListIterator<MathObject> lister = lmo.listIterator();
 		while(lister.hasNext()) {
 			MathObject mo = lister.next();
 			if(mo instanceof BinaryOperator) {
@@ -42,13 +42,42 @@ public class Decision {
 				lister.remove();
 				lister.add(new Operand(uo.getResult(o.getOperand())));  
 			}
-			h.setTreeItem(mo.getString());
-		}
-		if(rpn.size() > 1) {
+		}*/
+		if(lmo.size() > 1) {
 			throw new Exception("Не верно построена формула!!!");
 		}
-		result = ((Operand) rpn.get(0)).getOperand();
+//		result = ((Operand) lmo.get(0)).getOperand();
 	}
+	
+	public double decisionOperator(List<MathObject> lmo, int operator) {
+		ListIterator<MathObject> lister = lmo.listIterator();
+		int op = operator;
+		while(lister.hasNext() && op > 0) {
+			MathObject mo = lister.next();
+			if(mo instanceof BinaryOperator) {
+				BinaryOperator bo = (BinaryOperator) mo;
+				lister.remove();
+				Operand o2 = (Operand) lister.previous();
+				lister.remove();
+				Operand o1 = (Operand) lister.previous();
+				lister.remove();
+				lister.add(new Operand(bo.getResult(o1.getOperand(), o2.getOperand())));
+				op--;
+			} else if(mo instanceof UnaryOperator) {
+				UnaryOperator uo = (UnaryOperator) mo;
+				lister.remove();
+				Operand o = (Operand) lister.previous();
+				lister.remove();
+				lister.add(new Operand(uo.getResult(o.getOperand())));  
+				op--;
+			}
+		}
+		if(operator < lmo.size()) {
+			return ((Operand)lmo.get(operator)).getOperand();
+		} else {
+			return ((Operand) lmo.get(0)).getOperand();
+		}
+	} 
 	
 	public double getResult() {
 		return result;

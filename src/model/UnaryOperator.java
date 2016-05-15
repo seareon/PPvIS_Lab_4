@@ -27,6 +27,7 @@ public class UnaryOperator extends MathObject {
 				break;
 			case Constants.SQRT:
 				result = Math.sqrt(op);
+				break;
 			case "+/-":
 				result = -op;
 		}

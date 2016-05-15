@@ -6,12 +6,16 @@ import javafx.scene.control.TreeItem;
 
 public class ItemTree {
 	private TreeItem<String> treeIt;
-//	private TreeItem<String> input = null;		// boolean??????????????????????????
 	private boolean input = false;
 	private List<ItemTree> output = new ArrayList<>();
+	MathObject mo;
 	
-	public ItemTree(String str) {
-		treeIt = new TreeItem<>(str);
+	public ItemTree(MathObject mo) {
+		treeIt = new TreeItem<>(mo.getString());
+		if(mo instanceof BinaryOperator || mo instanceof UnaryOperator) {
+			treeIt.setExpanded(true); 
+		}
+		this.mo = mo;
 	}
 	
 	public TreeItem<String> getItem() {

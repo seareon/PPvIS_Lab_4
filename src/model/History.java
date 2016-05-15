@@ -45,7 +45,7 @@ public class History {
 		return node;
 	}
 	
-	public int getNumberOperators() {
+	public int getNumberOperators() {	//???????????????
 		return countOperator;
 	}
 	

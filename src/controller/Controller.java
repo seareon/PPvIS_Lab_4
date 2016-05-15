@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.List;
+import java.util.ListIterator;
 
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -11,9 +12,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyEvent;
+import model.BinaryOperator;
 import model.Constants;
 import model.History;
 import model.ItemTree;
+import model.MathObject;
+import model.Operand;
+import model.UnaryOperator;
 
 public class Controller {
 	@FXML
@@ -53,8 +58,44 @@ public class Controller {
 	
 	@FXML
 	private void setStepResult() {
-		List<ItemTree> lit = h.getItemTree();
-		
+		List<ItemTree> tempIt = h.getItemTree();
+		List<MathObject> tempMO = h.getRPN();
+		ListIterator<ItemTree> listerIt = tempIt.listIterator();
+		for(int indexOperator = 0; listerIt.hasNext(); ) {
+			TreeItem<String> ti = listerIt.next().getItem();
+			if(UnaryOperator.isUnaryOperator(ti.getValue()) ||
+					BinaryOperator.isBinaryOperator(ti.getValue())) {
+				indexOperator++;
+				if(!ti.isExpanded()) {
+					deleteElemFromRPN(indexOperator, tempMO, 
+							Decision.decisionOperator(h.getRPN(), indexOperator));
+					indexOperator--;
+				}
+			}
+		}
+	}
+	
+	private void deleteElemFromRPN(int indexOperator, List<MathObject> rpn, double newOp) {
+		ListIterator<MathObject> lister = rpn.listIterator();
+		boolean arity = true;
+		while(lister.hasNext()) {
+			MathObject mo = lister.next();
+			if(UnaryOperator.isUnaryOperator(mo.getString())) { 
+				arity = true;
+				indexOperator--;
+			} else if(BinaryOperator.isBinaryOperator(mo.getString())) {
+				arity = false;
+				indexOperator--;
+			}
+			if(indexOperator == 0) {
+				lister.remove();
+				lister.remove();
+				if(!arity) {
+					lister.remove();
+				}
+				lister.add(new Operand(newOp + ""));
+			}
+		}
 	}
 	
 	public TreeItem<String> setTreeView(ItemTree it) {

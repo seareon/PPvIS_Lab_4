@@ -39,7 +39,7 @@
                            <children>
                               <ScrollPane focusTraversable="false" hbarPolicy="ALWAYS" prefViewportHeight="364.0" prefViewportWidth="217.0" vbarPolicy="ALWAYS">
                                  <content>
-                                    <TreeView fx:id="treeView" editable="true" focusTraversable="false" prefHeight="364.0" prefWidth="217.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <TreeView fx:id="treeView" editable="true" focusTraversable="false" onMouseReleased="#setStepResult" prefHeight="364.0" prefWidth="217.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                  </content>
                               </ScrollPane>
                            </children>

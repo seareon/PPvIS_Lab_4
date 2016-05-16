@@ -1,7 +1,7 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -10,20 +10,24 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import model.BinaryOperator;
 import model.Constants;
 import model.History;
 import model.ItemTree;
+import model.MathObject;
+import model.UnaryOperator;
 
 public class Controller {
 	@FXML
     private TextField inputFieldFormula;
 	
 	@FXML
-    private Label outputFieldResult;
+    private Label outputFieldResult; 
 	
 	@FXML
-    private TreeView<String> treeView;  
+    private TreeView<String> treeView;   
 	
 	@FXML
     private Button factor;
@@ -47,21 +51,11 @@ public class Controller {
 	private History h = new History();
 	
 	@FXML
-    private void initialize() { // нужно ли?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
-	}
-	
-	@FXML
 	private void setStepResult() {
-		List<ItemTree> lit = h.getItemTree();
-		
-	}
-	
-	public TreeItem<String> setTreeView(ItemTree it) {
-		for(int indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
-			it.getItem().getChildren().add(setTreeView(it.getOutput(indexOutputList))); 
-		}
-		return it.getItem(); 
+		ItemTree it = h.getItemCloneRoot();
+		MathObject mo = TreeUtil.checkNoExpandedItem(h.getItemRoot(), it);
+		TreeUtil.checkItem(it, mo, -1);
+		inputFieldFormula.setText(TreeUtil.genStrStep(it)); 
 	}
 	
 	@FXML 
@@ -69,7 +63,6 @@ public class Controller {
 		inputFieldFormula.setText("");
 		outputFieldResult.setText("");
 		treeView.setRoot(null);
-		
 	}
 
 	@FXML 
@@ -84,22 +77,22 @@ public class Controller {
 	
 	@FXML
 	private void logPress() {
-		addText("log(");
+		addText(Constants.LOG + Constants.BRACKETLEFT);
 	}
 	
 	@FXML
 	private void lnPress() {
-		addText("ln(");
+		addText(Constants.LN + Constants.BRACKETLEFT);
 	}
 	
 	@FXML
 	private void oneDevXPress() {
-		addText("1/");
+		addText(Constants.ONE + Constants.DIVISION);
 	}
 	
 	@FXML
 	private void ExpPress() {
-		addText("e^");
+		addText(Constants.EKSPANENTA + Constants.POWER);
 	}
 	
 	@FXML
@@ -116,7 +109,7 @@ public class Controller {
 				d.setRPN(); 
 			}
 			outputFieldResult.setText(d.getResult() + "");  
-			TreeItem<String> root = setTreeView(h.getItemRoot());
+			TreeItem<String> root = TreeUtil.setTreeView(h.getItemRoot());
 			root.setExpanded(true);
 			treeView.setRoot(root); 
 		} catch (Exception e) {
@@ -183,75 +176,82 @@ public class Controller {
 	
 	@FXML 
 	private void inputFormula(KeyEvent e) {  
-		switch(e.getText()) {
-			case "1":
-				if(e.isShiftDown()) {
-					addText(Constants.FACTORIAL);
-				}
-				else {
-					addText("1");
-				}
+		switch(e.getCode()) {
+			case DIGIT1:
+				addText(Constants.ONE);
 				break;
-			case "2":
-				addText("2");
+			case DIGIT2:
+				addText(Constants.STWO);
 				break;
-			case "3":
-				addText("3");
+			case DIGIT3:
+				addText(Constants.THREE);
 				break;
-			case "4":
-				addText("4");
+			case DIGIT4:
+				addText(Constants.FOUR);
 				break;
-			case "5":
+			case DIGIT5:
 				if(e.isShiftDown()) {
 					addText(Constants.PERCENT);
 				} else {
-					addText("5");
+					addText(Constants.FIVE);
 				}
 				break;
-			case "6":
+			case DIGIT6:
 				if(e.isShiftDown()) {
 					addText(Constants.POWER);
 				} else {
-					addText("6");
+					addText(Constants.SIX);
 				}
 				break;
-			case "7":
-				addText("7");
+			case DIGIT7:
+				addText(Constants.SEVEN);
 				break;
-			case "8":
+			case DIGIT8:
 				if(e.isShiftDown()) {
 					addText(Constants.MULTIPLICATION);
 				} else {
-					addText("8");
+					addText(Constants.EIGHT);
 				}
 				break;
-			case "9":
+			case DIGIT9:
 				if(e.isShiftDown()) {
 					addText(Constants.BRACKETLEFT);
 				} else {
-					addText("9");
+					addText(Constants.NINE);
 				}
 				break;
-			case "0":
+			case DIGIT0:
 				if(e.isShiftDown()) {
 					addText(Constants.BRACKETRIGHT);
 				} else {
-					addText("0");
+					addText(Constants.ZERO);
 				}
-				break;
-			case Constants.MINUS:
+				break;			
+			case MINUS:
 				addText(Constants.MINUS);
 				break;
-			case Constants.DIVISION:
+			case DIVIDE:
 				addText(Constants.DIVISION);
 				break;
-			case "=":
+			case EQUALS:
 				if(e.isShiftDown()) {
 					addText(Constants.PLUS);
-				} else {
-					addText("=");
 				}
+				break;
+			case ADD:
+				addText(Constants.PLUS);
+				break;
+			case BACK_SPACE:
+				delete();
+				break;
+			case ENTER:
+				equelsPress();
+				break;
+			case SUBTRACT:
+				addText(Constants.MINUS);
+				break;
+			case MULTIPLY:
+				addText(Constants.MULTIPLICATION);
 		}
-//		System.out.println(e.toString());
 	}
 }

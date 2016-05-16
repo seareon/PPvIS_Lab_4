@@ -18,6 +18,14 @@ public class ItemTree {
 		this.mo = mo;
 	}
 	
+	public MathObject getMathObject() {
+		return mo;
+	}
+	
+	public void setMathObgect(MathObject mo) {
+		this.mo = mo;
+	}
+	
 	public TreeItem<String> getItem() {
 		return treeIt;
 	}
@@ -30,8 +38,12 @@ public class ItemTree {
 		return input;
 	}
 	
-	public void setArcOutput(ItemTree it) {
-		output.add(0, it);
+	public void setArcOutput(ItemTree it, int n) {
+		output.add(n, it);
+	}
+	
+	public void deleteOutput(int n) {
+		output.remove(n);
 	}
 	
 	public int countOutput() {
@@ -43,5 +55,10 @@ public class ItemTree {
 			return output.get(i);
 		}
 		return null;
+	}
+	
+	public void clear() {
+		output.clear();
+		input = false;
 	}
 }

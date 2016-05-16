@@ -15,15 +15,15 @@ public class Parser {
 	public Parser(String str, History h) throws Exception {
 		this.h = h;
 		operators = new Stack<>();
-		operators.push("|");
+		operators.push(Constants.START_END_FORMULA);
 		parse(str);
 	}
 	
 	private void parse(String str) throws Exception {
-		str += "|";
+		str += Constants.START_END_FORMULA;
 		String elem = "";
 		for(int indexStr = 0; indexStr < str.length(); indexStr++) {
-			if(Character.isDigit(str.charAt(indexStr)) || str.charAt(indexStr) == '.') {
+			if(Character.isDigit(str.charAt(indexStr)) || str.charAt(indexStr) == Constants.POINT) {
 				elem += str.charAt(indexStr);
 			}
 			else { 
@@ -39,7 +39,7 @@ public class Parser {
 	public void setStrForParse(String str) throws Exception { 
 		h.clearRPN();
 		operators.clear();
-		operators.push("|");
+		operators.push(Constants.START_END_FORMULA);
 		parse(str);
 	}
 	
@@ -55,7 +55,6 @@ public class Parser {
 				checkDivMultModPowOperators(Constants.DIVISION);
 				break;
 			case Constants.FACTORIAL:
-//				rpn.add(new UnaryOperator(Constants.FACTORIAL));
 				h.setTreeItem(new UnaryOperator(Constants.FACTORIAL));
 				break;
 			case Constants.LN:
@@ -89,7 +88,7 @@ public class Parser {
 	
 	private void checkBracket() throws Exception {
 		do {
-			if(operators.peek().equals("|")) {
+			if(operators.peek().equals(Constants.START_END_FORMULA)) {
 				throw new Exception("Ошибка - открытая скобка в начале формулы!");
 			} else if(operators.peek().equals(Constants.BRACKETLEFT)) {
 				operators.pop();
@@ -105,7 +104,7 @@ public class Parser {
 	
 	private void checkEndFormula() throws Exception {
 		do {
-			if(operators.peek().equals("|")) {
+			if(operators.peek().equals(Constants.START_END_FORMULA)) {
 				break;
 			} else if(operators.peek().equals(Constants.BRACKETLEFT)) {
 				throw new Exception("Ошибка - открытая скобка после конца формулы!");
@@ -116,7 +115,7 @@ public class Parser {
 	
 	private void checkPlusMinusOperators(String str) {
 		do{
-			if(operators.peek().equals("|") || operators.peek().equals(Constants.BRACKETLEFT)) {
+			if(operators.peek().equals(Constants.START_END_FORMULA) || operators.peek().equals(Constants.BRACKETLEFT)) {
 				operators.add(str);
 				break;
 			} else {
@@ -153,12 +152,12 @@ public class Parser {
 	private int readOperand(String str, int indexStr) throws Exception {
 		int newIndex = -1;
 		switch(str.charAt(indexStr)) {
-			case 'e':
-				h.setTreeItem(new Operand("2.7182"));
+			case Constants.CEKSPANENTA:
+				h.setTreeItem(new Operand(Constants.NEKSPANENTA));
 				newIndex = indexStr;
 				break;
-			case 'l':
-				if(str.charAt(indexStr + 1) == 'o') {
+			case Constants.L:
+				if(str.charAt(indexStr + 1) == Constants.O) {
 					addOperator(Constants.LOG);
 					newIndex = indexStr + 2;
 				} else {
@@ -168,7 +167,7 @@ public class Parser {
 				break;
 			case '-':
 				if(indexStr == 0 || str.charAt(indexStr - 1) == Constants.BRACKETLEFT.charAt(0)) {
-					operators.add("+/-");
+					operators.add(Constants.NEGATIVE);
 				} else {
 					addOperator(str.charAt(indexStr) + "");
 				}

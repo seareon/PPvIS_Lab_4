@@ -1,23 +1,20 @@
 package controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import model.BinaryOperator;
 import model.Constants;
 import model.History;
 import model.ItemTree;
 import model.MathObject;
-import model.UnaryOperator;
 
 public class Controller {
 	@FXML
@@ -44,11 +41,20 @@ public class Controller {
 	@FXML
     private Button pow;
 	
+	@FXML 
+	private ScrollPane sp1;
+	
+	@FXML 
+	private ScrollPane sp2;
+
 	private Parser p = null;
-	
 	private Decision d = null;
-	
 	private History h = new History();
+	private int caretPosition = -1;
+	
+/*	@FXML 
+	protected void initialize() {
+	}*/
 	
 	@FXML
 	private void setStepResult() {
@@ -58,11 +64,46 @@ public class Controller {
 		inputFieldFormula.setText(TreeUtil.genStrStep(it)); 
 	}
 	
+	@FXML
+	private void pressButtonLeftFormula() {
+		inputFieldFormula.positionCaret(inputFieldFormula.getCaretPosition() - 50);
+	}
+	
+	@FXML
+	private void pressButtonRightFormula() {
+		inputFieldFormula.positionCaret(inputFieldFormula.getCaretPosition() + 50);
+	}
+	
+	@FXML
+	private void pressButtonLeftResult() {
+		if(caretPosition != -1) {
+			String str = d.getResult() + "";
+			if(caretPosition > 0 ) {
+				str = str.substring(caretPosition-- * 5 - 5);
+				outputFieldResult.setText(str); 
+			}
+		}
+	} 
+	
+	@FXML
+	private void pressButtonRightResult() { 
+		if(caretPosition != -1) {
+			String str = d.getResult() + "";
+			if(caretPosition < (int) str.length() / 18) {
+				caretPosition++; 
+				str = str.substring(caretPosition * 5);
+				outputFieldResult.setText(str); 
+			}
+		}
+	}
+
+	
 	@FXML 
 	private void clearPress() {
 		inputFieldFormula.setText("");
 		outputFieldResult.setText("");
 		treeView.setRoot(null);
+		caretPosition = -1;
 	}
 
 	@FXML 
@@ -98,6 +139,7 @@ public class Controller {
 	@FXML
 	private void equelsPress() {
 		try {
+			caretPosition = 0;
 			if(p == null) {
 				p = new Parser(inputFieldFormula.getText(), h);
 			} else {
@@ -116,17 +158,7 @@ public class Controller {
 			inputFieldFormula.setText(e.getMessage());
 //			e.printStackTrace();
 		}
-	}
-
-	@FXML
-	private void pressButtonLeft() {
-		inputFieldFormula.positionCaret(inputFieldFormula.getCaretPosition() - 50);
-	}
-	
-	@FXML
-	private void pressButtonRight() {
-		inputFieldFormula.positionCaret(inputFieldFormula.getCaretPosition() + 50);
-	}
+	} 
 	
 	@FXML 
 	private void pressButton(Event event) {

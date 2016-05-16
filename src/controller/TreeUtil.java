@@ -63,7 +63,7 @@ public class TreeUtil {
 			} else if(it.getMathObject().getString().equals(Constants.FACTORIAL)) {
 				str += ")!";
 			} else {
-				str += ")";
+				str += ")"; 
 			}
 		}
 		if((!(it.getMathObject() instanceof BinaryOperator) && 

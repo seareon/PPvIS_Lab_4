@@ -24,15 +24,36 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <SplitPane dividerPositions="0.17587939698492464" focusTraversable="false" orientation="VERTICAL" prefHeight="448.0" prefWidth="219.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <SplitPane dividerPositions="0.17937219730941703" focusTraversable="false" orientation="VERTICAL" prefHeight="448.0" prefWidth="219.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                            <children>
-                              <Label fx:id="outputFieldResult" ellipsisString="" focusTraversable="false" prefHeight="74.0" prefWidth="217.0" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                              <Label fx:id="outputFieldResult" ellipsisString="" focusTraversable="false" prefHeight="33.0" prefWidth="231.0" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <font>
                                     <Font size="24.0" />
                                  </font>
                               </Label>
+                              <GridPane layoutY="54.0" prefHeight="20.0" prefWidth="231.0" AnchorPane.topAnchor="56.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Button focusTraversable="false" maxWidth="119.0" mnemonicParsing="false" onAction="#pressButtonLeftResult" prefHeight="20.0" prefWidth="119.0" text="&lt;">
+                                       <font>
+                                          <Font size="9.0" />
+                                       </font>
+                                    </Button>
+                                    <Button focusTraversable="false" maxWidth="119.0" mnemonicParsing="false" onAction="#pressButtonRightResult" prefHeight="20.0" prefWidth="119.0" text="&gt;" GridPane.columnIndex="1">
+                                       <font>
+                                          <Font size="9.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </GridPane>
                            </children>
                         </AnchorPane> 
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="374.0" prefWidth="217.0">
@@ -54,8 +75,8 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                            <children>
-                              <Button focusTraversable="false" layoutX="6.0" mnemonicParsing="false" onAction="#pressButtonLeft" prefHeight="75.0" prefWidth="32.0" text="&lt;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="444.0" AnchorPane.topAnchor="0.0" />
-                              <Button focusTraversable="false" layoutX="444.0" mnemonicParsing="false" onAction="#pressButtonRight" prefHeight="75.0" prefWidth="32.0" text="&gt;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="444.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <Button focusTraversable="false" layoutX="6.0" mnemonicParsing="false" onAction="#pressButtonLeftFormula" prefHeight="75.0" prefWidth="32.0" text="&lt;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="444.0" AnchorPane.topAnchor="0.0" />
+                              <Button focusTraversable="false" layoutX="444.0" mnemonicParsing="false" onAction="#pressButtonRightFormula" prefHeight="75.0" prefWidth="32.0" text="&gt;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="444.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                               <TextField fx:id="inputFieldFormula" editable="false" layoutX="32.0" layoutY="7.0" onKeyPressed="#inputFormula" prefHeight="75.0" prefWidth="476.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="33.0" AnchorPane.topAnchor="0.0">
                                  <font>
                                     <Font size="18.0" />

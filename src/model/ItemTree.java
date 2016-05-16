@@ -18,7 +18,7 @@ public class ItemTree {
 		this.mo = mo;
 	}
 	
-	public MathObject getMethObject() {
+	public MathObject getMathObject() {
 		return mo;
 	}
 	

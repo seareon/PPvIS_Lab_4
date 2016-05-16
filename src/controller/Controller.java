@@ -59,7 +59,9 @@ public class Controller {
 	
 	@FXML
 	private void setStepResult() {
-		checkNoExpandedItem(h.getItemRoot());
+		ItemTree it = h.getItemRoot();
+		checkNoExpandedItem(it);
+		inputFieldFormula.setText(genStrStep(it)); 
 	}
 	
 	private MathObject checkNoExpandedItem(ItemTree it) {
@@ -85,7 +87,40 @@ public class Controller {
 		for(int indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
 			getRPNForOperator(it.getOutput(indexOutputList), rpn);
 		}
-		rpn.add(it.getMethObject());
+		rpn.add(it.getMathObject());
+	}
+	
+	private String genStrStep(ItemTree it) {
+		String str = "";
+		boolean notFactor = false; 
+		int indexOutputList;
+		for(indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
+			notFactor = true;
+			if(it.getMathObject() instanceof UnaryOperator && indexOutputList == 0 &&
+					!it.getMathObject().getString().equals(Constants.FACTORIAL)) {
+				str += it.getMathObject().getString() + "(";
+				notFactor = false;
+			}
+			if(notFactor && indexOutputList == 0) {
+				str += "(";
+			}
+			str += genStrStep(it.getOutput(indexOutputList));
+			if(it.getMathObject() instanceof BinaryOperator && indexOutputList == 0) {
+				str += it.getMathObject().getString();
+			} else if(it.getMathObject().getString().equals(Constants.FACTORIAL)) {
+				str += ")!";
+			} else {
+				str += ")";
+			}
+		}
+		if((!(it.getMathObject() instanceof BinaryOperator) && 
+							!(it.getMathObject() instanceof UnaryOperator))) {
+			str += it.getMathObject().getString();
+			if(indexOutputList == 2) {
+				str += ")";
+			}
+		}
+		return str;
 	}
 	
 	public TreeItem<String> setTreeView(ItemTree it) {

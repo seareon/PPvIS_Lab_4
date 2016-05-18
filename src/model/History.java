@@ -9,8 +9,7 @@ public class History {
 	private ItemTree node; 
 	
 	public List<MathObject> getRPN() {
-		List<MathObject> temp = new ArrayList<>(rpn);
-		return temp;
+		return rpn;
 	}
 	
 	public void clearRPN() {
@@ -19,44 +18,26 @@ public class History {
 	
 	public void setTreeItem(MathObject mo) {
 		rpn.add(mo);
-		node = setItem(mo, treeIt);
-	}
-	
-	public ItemTree setItem(MathObject mo, List<ItemTree> temp) {
-		ItemTree node = new ItemTree(mo);
-		temp.add(node);
+		node = new ItemTree(mo);
+		treeIt.add(node);
 		int countOperand = 0;
 		if(mo instanceof BinaryOperator) {
 			countOperand = 2;
 		} else if(mo instanceof UnaryOperator) {
 			countOperand = 1;
 		}
-		for(int indexTree = temp.size() - 2; indexTree >= 0 && countOperand > 0; indexTree--) {
-			if(!temp.get(indexTree).isHaveInputArc()) {
-				node.setArcOutput(temp.get(indexTree), 0); 
-				temp.get(indexTree).setInput();
+		for(int indexTree = treeIt.size() - 2; indexTree >= 0 && countOperand > 0; indexTree--) {
+			if(!treeIt.get(indexTree).isHaveInputArc()) {
+				node.setArcOutput(treeIt.get(indexTree), 0); 
+				treeIt.get(indexTree).setInput();
 				if(countOperand--  == 1) {
 					break;
 				}
 			}
 		}
-		return node;
 	}
 	
 	public ItemTree getItemRoot() {
 		return node;
-	}
-	
-	public ItemTree getItemCloneRoot() {		// нужно ли делать копию??
-		ItemTree node = null;
-		List<ItemTree> temp = new ArrayList<>();
-		for(MathObject mo : rpn) {
-			node = setItem(mo, temp);
-		}
-		return node;
-	}
-	
-	public List<ItemTree> getItemTree() {
-		return treeIt;
 	}
 }

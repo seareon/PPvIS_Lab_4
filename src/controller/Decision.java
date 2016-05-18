@@ -1,6 +1,5 @@
 package controller;
 
-import java.util.List;
 import java.util.ListIterator;
 import model.BinaryOperator;
 import model.History;
@@ -12,26 +11,13 @@ public class Decision {
 	private double result;
 	private History h;
 	
-	public Decision(History h) throws Exception {// гавно
+	public Decision(History h) throws Exception {
 		this.h = h;
 		setRPN();
 	}
 	
-	public void setRPN() throws Exception { // гавно// гавно
-		decision();
-	}
-	
-	private void decision() throws Exception {	// гавно
-		List<MathObject> lmo = h.getRPN();
-		decisionOperator(lmo);
-		if(lmo.size() > 1) {
-			throw new Exception("Ќе верно построена формула!!!");
-		}
-		result = ((Operand) lmo.get(0)).getOperand();
-	}
-	
-	public static void decisionOperator(List<MathObject> lmo) {// гавно
-		ListIterator<MathObject> lister = lmo.listIterator();
+	public void setRPN() throws Exception { 
+		ListIterator<MathObject> lister = h.getRPN().listIterator();
 		while(lister.hasNext()) {
 			MathObject mo = lister.next();
 			if(mo instanceof BinaryOperator) {
@@ -50,7 +36,11 @@ public class Decision {
 				lister.add(new Operand(uo.getResult(o.getOperand())));  
 			}
 		}
-	} 
+		if(h.getRPN().size() > 1) {
+			throw new Exception("Ќе верно построена формула!!!");
+		}
+		result = ((Operand) h.getRPN().get(0)).getOperand();
+	}
 	
 	public double getResult() {// гавно
 		return result;

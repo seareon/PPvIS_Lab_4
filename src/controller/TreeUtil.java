@@ -1,76 +1,66 @@
 package controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.scene.control.TreeItem;
 import model.BinaryOperator;
 import model.Constants;
 import model.ItemTree;
 import model.MathObject;
+import model.Operand;
 import model.UnaryOperator;
 
-public class TreeUtil {
-	static public void checkItem(ItemTree it, MathObject mo,  int n) {		// гавно
-		if(mo != null) {
-			if(n > -1) {
-				it.deleteOutput(n);
-				it.setArcOutput(new ItemTree(mo), n);
-			} else {
-				it.clear();
-				it.setMathObgect(mo);
-			} 
-		}
-	}
-	
-	static public MathObject checkNoExpandedItem(ItemTree it, ItemTree itCopy) {// гавно
-		MathObject mo;
+public class TreeUtil {	
+	static public void checkNoExpandedItem(ItemTree it) {
 		for(int indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
 			if(it.getItem().isExpanded()) {
-				mo = checkNoExpandedItem(it.getOutput(indexOutputList), 
-						itCopy.getOutput(indexOutputList));
-				checkItem(itCopy, mo, indexOutputList);
-			} else {
-				List<MathObject> rpn = new ArrayList<>();
-				getRPNForOperator(it, rpn);
-				Decision.decisionOperator(rpn);
-				return rpn.get(0);
+				if(!Operand.isOperand(it.getMathObject().getString()) && Operand.isOperand(it.getItem().getValue())) {
+					it.getItem().setValue(it.getMathObject().getString());
+				}
+				checkNoExpandedItem(it.getOutput(indexOutputList));
+			} else if(!Operand.isOperand(it.getItem().getValue())) {
+				if(it.getMathObject() instanceof UnaryOperator) {
+					it.getItem().setValue(((UnaryOperator) it.getMathObject()).getResult() + "");
+				} else {
+					it.getItem().setValue(((BinaryOperator) it.getMathObject()).getResult() + "");
+				}
 			}
 		}
-		return null;
-	}
-	
-	static public void getRPNForOperator(ItemTree it, List<MathObject> rpn) {// гавно
-		for(int indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
-			getRPNForOperator(it.getOutput(indexOutputList), rpn);
-		}
-		rpn.add(it.getMathObject());
 	}
 	
 	static public String genStrStep(ItemTree it) {	// гавно
-		String str = ""; 
-		int indexOutputList;
-		for(indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
-			if(it.getMathObject() instanceof UnaryOperator && indexOutputList == 0 &&
-					!it.getMathObject().getString().equals(Constants.FACTORIAL)) {
-				str += it.getMathObject().getString() + "(";
-			} else if(indexOutputList == 0) {
-				str += "(";
-			}
-			str += genStrStep(it.getOutput(indexOutputList));
-			if(it.getMathObject() instanceof BinaryOperator && indexOutputList == 0 ) {
-				str += it.getMathObject().getString();
-			} else if(it.getMathObject().getString().equals(Constants.FACTORIAL)) {
-				str += ")!";
-			} else {
-				str += ")"; 
-			}
-		}
-		if((!(it.getMathObject() instanceof BinaryOperator) && 
-							!(it.getMathObject() instanceof UnaryOperator))) {
-			str += it.getMathObject().getString();
-			if(indexOutputList == 2) {
-				str += ")";
+		String str = "";
+		if(it.countOutput() == 0) {
+			str += it.getItem().getValue();
+		} else {
+			for(int indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
+				if(it.getItem().isExpanded()) {
+					if(indexOutputList == 0) {
+						if(!Constants.FACTORIAL.equals(it.getMathObject().getString()) && 
+								UnaryOperator.isUnaryOperator(it.getItem().getValue())) {
+							str += it.getItem().getValue() + "(";
+						} else {
+							str += "(";
+						}
+					}
+					str += genStrStep(it.getOutput(indexOutputList));
+					if(indexOutputList == 0) {
+						if(it.getMathObject() instanceof UnaryOperator) {
+							if(!Constants.FACTORIAL.equals(it.getMathObject().getString())) {
+								str += ")";
+							} else {
+								str += ")!";
+							}
+							break;
+						} else {
+							str += it.getItem().getValue();
+						}
+					} else {
+						str += ")";
+						break;
+					}
+				} else {
+					str += it.getItem().getValue();
+					break;
+				}
 			}
 		}
 		return str;

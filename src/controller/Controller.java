@@ -52,10 +52,8 @@ public class Controller {
 	
 	@FXML
 	private void setStepResult() {
-		ItemTree it = h.getItemCloneRoot();
-		MathObject mo = TreeUtil.checkNoExpandedItem(h.getItemRoot(), it);
-		TreeUtil.checkItem(it, mo, -1);
-		inputFieldFormula.setText(TreeUtil.genStrStep(it)); 
+		TreeUtil.checkNoExpandedItem(h.getItemRoot());
+		inputFieldFormula.setText(TreeUtil.genStrStep(h.getItemRoot())); 
 	}
 	
 	@FXML

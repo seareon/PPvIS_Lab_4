@@ -22,4 +22,13 @@ public class Operand extends MathObject {
 	public double getOperand() {
 		return dOperand;
 	}
+	
+	static public boolean isOperand(String str) {
+		for(char ch : str.toCharArray()) {
+			if(!Character.isDigit(ch) && Constants.POINT != ch) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

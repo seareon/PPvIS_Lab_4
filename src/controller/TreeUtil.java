@@ -11,7 +11,7 @@ import model.MathObject;
 import model.UnaryOperator;
 
 public class TreeUtil {
-	static public void checkItem(ItemTree it, MathObject mo,  int n) {
+	static public void checkItem(ItemTree it, MathObject mo,  int n) {		// гавно
 		if(mo != null) {
 			if(n > -1) {
 				it.deleteOutput(n);
@@ -23,7 +23,7 @@ public class TreeUtil {
 		}
 	}
 	
-	static public MathObject checkNoExpandedItem(ItemTree it, ItemTree itCopy) {
+	static public MathObject checkNoExpandedItem(ItemTree it, ItemTree itCopy) {// гавно
 		MathObject mo;
 		for(int indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
 			if(it.getItem().isExpanded()) {
@@ -40,14 +40,14 @@ public class TreeUtil {
 		return null;
 	}
 	
-	static public void getRPNForOperator(ItemTree it, List<MathObject> rpn) {
+	static public void getRPNForOperator(ItemTree it, List<MathObject> rpn) {// гавно
 		for(int indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
 			getRPNForOperator(it.getOutput(indexOutputList), rpn);
 		}
 		rpn.add(it.getMathObject());
 	}
 	
-	static public String genStrStep(ItemTree it) {	// гавнище!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	static public String genStrStep(ItemTree it) {	// гавно
 		String str = ""; 
 		int indexOutputList;
 		for(indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
@@ -76,10 +76,52 @@ public class TreeUtil {
 		return str;
 	}
 	
-	static public TreeItem<String> setTreeView(ItemTree it) {
+	static public TreeItem<String> setTreeView(ItemTree it) {// гавно
 		for(int indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
 			it.getItem().getChildren().add(setTreeView(it.getOutput(indexOutputList))); 
 		}
 		return it.getItem(); 
+	}
+	
+	static public int doScan(ItemTree it) {// гавно
+		int checkDo = 0;
+		for(int indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
+			if(checkDo == 0 ) {
+				if(it.getItem().isExpanded()) {
+					checkDo = doScan(it.getOutput(indexOutputList));
+				} else  {
+					it.getItem().setExpanded(true);
+					checkDo = -1;
+					break;
+				}
+			} 
+		}
+		return checkDo;
+	}
+	
+	static public int doConvolution(ItemTree it) {// гавно
+		int checkDo = 0;
+		for(int indexOutputList = 0; indexOutputList < it.countOutput(); indexOutputList++) {
+			if(checkDo == 0 ) {
+				if(it.getItem().isExpanded()) {
+					checkDo = doConvolution(it.getOutput(indexOutputList));
+				} else  {
+					checkDo = 1;
+					break;
+				}
+			} 
+			if(checkDo == 1 && ((it.getMathObject() instanceof BinaryOperator && indexOutputList == 1) || 
+					it.getMathObject() instanceof UnaryOperator)) {
+				it.getItem().setExpanded(false);
+				checkDo = -1;
+				break;
+			} else if(checkDo != -1) {
+				checkDo = 0;
+			}
+		}
+		if(it.countOutput() == 0) {
+			checkDo = 1;
+		}
+		return checkDo;
 	}
 }

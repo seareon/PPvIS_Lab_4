@@ -7,7 +7,6 @@ public class History {
 	private List<MathObject> rpn = new ArrayList<>();
 	private List<ItemTree> treeIt = new ArrayList<>();
 	private ItemTree node; 
-//	private int countOperator = 0;
 	
 	public List<MathObject> getRPN() {
 		List<MathObject> temp = new ArrayList<>(rpn);
@@ -48,7 +47,7 @@ public class History {
 		return node;
 	}
 	
-	public ItemTree getItemCloneRoot() {
+	public ItemTree getItemCloneRoot() {		// нужно ли делать копию??
 		ItemTree node = null;
 		List<ItemTree> temp = new ArrayList<>();
 		for(MathObject mo : rpn) {
@@ -56,10 +55,6 @@ public class History {
 		}
 		return node;
 	}
-	
-/*	public int getNumberOperators() {	//???????????????
-		return countOperator;
-	} */
 	
 	public List<ItemTree> getItemTree() {
 		return treeIt;

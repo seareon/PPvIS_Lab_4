@@ -6,7 +6,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -50,11 +49,6 @@ public class Controller {
 	private Parser p = null;
 	private Decision d = null;
 	private History h = new History();
-	private int caretPosition = -1;
-	
-/*	@FXML 
-	protected void initialize() {
-	}*/
 	
 	@FXML
 	private void setStepResult() {
@@ -74,27 +68,16 @@ public class Controller {
 		inputFieldFormula.positionCaret(inputFieldFormula.getCaretPosition() + 50);
 	}
 	
-	@FXML
-	private void pressButtonLeftResult() {
-		if(caretPosition != -1) {
-			String str = d.getResult() + "";
-			if(caretPosition > 0 ) {
-				str = str.substring(caretPosition-- * 5 - 5);
-				outputFieldResult.setText(str); 
-			}
-		}
-	} 
+	@FXML 
+	private void convolution() {		// гавно
+		TreeUtil.doConvolution(h.getItemRoot());
+		setStepResult();
+	}
 	
 	@FXML
-	private void pressButtonRightResult() { 
-		if(caretPosition != -1) {
-			String str = d.getResult() + "";
-			if(caretPosition < (int) str.length() / 18) {
-				caretPosition++; 
-				str = str.substring(caretPosition * 5);
-				outputFieldResult.setText(str); 
-			}
-		}
+	private void scan() { 				// гавнище
+		TreeUtil.doScan(h.getItemRoot());
+		setStepResult();
 	}
 
 	
@@ -103,7 +86,6 @@ public class Controller {
 		inputFieldFormula.setText("");
 		outputFieldResult.setText("");
 		treeView.setRoot(null);
-		caretPosition = -1;
 	}
 
 	@FXML 
@@ -137,26 +119,27 @@ public class Controller {
 	}
 	
 	@FXML
-	private void equelsPress() {
-		try {
-			caretPosition = 0;
-			if(p == null) {
-				p = new Parser(inputFieldFormula.getText(), h);
-			} else {
-				p.setStrForParse(inputFieldFormula.getText());
+	private void equalsPress() {
+		if(inputFieldFormula.getText().length() > 0) {
+			try {
+				if(p == null) {
+					p = new Parser(inputFieldFormula.getText(), h);
+				} else {
+					p.setStrForParse(inputFieldFormula.getText());
+				}
+				if(d == null) {
+					d = new Decision(h);
+				} else {
+					d.setRPN(); 
+				}
+				outputFieldResult.setText(d.getResult() + "");  
+				TreeItem<String> root = TreeUtil.setTreeView(h.getItemRoot());
+				root.setExpanded(true);
+				treeView.setRoot(root); 
+			} catch (Exception e) {
+				inputFieldFormula.setText(e.getMessage());
+//				e.printStackTrace();
 			}
-			if(d == null) {
-				d = new Decision(h);
-			} else {
-				d.setRPN(); 
-			}
-			outputFieldResult.setText(d.getResult() + "");  
-			TreeItem<String> root = TreeUtil.setTreeView(h.getItemRoot());
-			root.setExpanded(true);
-			treeView.setRoot(root); 
-		} catch (Exception e) {
-			inputFieldFormula.setText(e.getMessage());
-//			e.printStackTrace();
 		}
 	} 
 	
@@ -177,7 +160,7 @@ public class Controller {
 		if(event.getSource() instanceof CheckBox) {
 			CheckBox cb = (CheckBox)event.getSource();
 			switch(cb.getText()) {
-				case "log/ln":
+				case Constants.RADIO_BUTTON_LOG_LN:
 					if(cb.isSelected()) {
 						log.setDisable(false);
 						ln.setDisable(false);
@@ -186,7 +169,7 @@ public class Controller {
 						ln.setDisable(true);
 					}
 					break;
-				case "power":
+				case Constants.RADIO_BUTTON_POWER:
 					if(cb.isSelected()) {
 						pow.setDisable(false);
 						exp.setDisable(false);
@@ -195,7 +178,7 @@ public class Controller {
 						exp.setDisable(true);
 					}
 					break;
-				case "factorial":
+				case Constants.RADIO_BUTTON_FACTORIAL:
 					if(cb.isSelected()) {
 						factor.setDisable(false);
 					} else {
@@ -213,7 +196,7 @@ public class Controller {
 				addText(Constants.ONE);
 				break;
 			case DIGIT2:
-				addText(Constants.STWO);
+				addText(Constants.S_TWO);
 				break;
 			case DIGIT3:
 				addText(Constants.THREE);
@@ -277,13 +260,17 @@ public class Controller {
 				delete();
 				break;
 			case ENTER:
-				equelsPress();
+				equalsPress();
 				break;
 			case SUBTRACT:
 				addText(Constants.MINUS);
 				break;
 			case MULTIPLY:
 				addText(Constants.MULTIPLICATION);
+				break;
+			case DECIMAL:
+				addText(Constants.POINT + "");
 		}
+//		System.out.println(e); 
 	}
 }

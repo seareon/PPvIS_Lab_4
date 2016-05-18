@@ -2,6 +2,7 @@ package model;
 
 public class UnaryOperator extends MathObject {
 	private String operator;
+	private double result = 0.0;
 	
 	public UnaryOperator(String str) {
 		operator = str;
@@ -11,10 +12,14 @@ public class UnaryOperator extends MathObject {
 		return operator;
 	}
 	
+	public double getResult() {
+		return result;
+	}
+	
 	public double getResult(double op) {
-		double result = 1;
 		switch(operator) {
 			case Constants.FACTORIAL:
+				result = 1;
 				for(int currentNumber = 2; currentNumber <= op; ++currentNumber) {
 					result *= currentNumber;
 				}

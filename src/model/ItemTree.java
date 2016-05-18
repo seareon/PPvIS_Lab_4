@@ -7,6 +7,7 @@ import javafx.scene.control.TreeItem;
 public class ItemTree {
 	private TreeItem<String> treeIt;
 	private boolean input = false;
+	private boolean visited = false;		// флаг посещённых вершин, нужно??????????
 	private List<ItemTree> output = new ArrayList<>();
 	MathObject mo;
 	

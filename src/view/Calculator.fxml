@@ -42,12 +42,12 @@
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Button focusTraversable="false" maxWidth="119.0" mnemonicParsing="false" onAction="#pressButtonLeftResult" prefHeight="20.0" prefWidth="119.0" text="&lt;">
+                                    <Button focusTraversable="false" maxWidth="119.0" mnemonicParsing="false" onAction="#convolution" prefHeight="20.0" prefWidth="119.0" text="&lt;">
                                        <font>
                                           <Font size="9.0" />
                                        </font>
                                     </Button>
-                                    <Button focusTraversable="false" maxWidth="119.0" mnemonicParsing="false" onAction="#pressButtonRightResult" prefHeight="20.0" prefWidth="119.0" text="&gt;" GridPane.columnIndex="1">
+                                    <Button focusTraversable="false" maxWidth="119.0" mnemonicParsing="false" onAction="#scan" prefHeight="20.0" prefWidth="119.0" text="&gt;" GridPane.columnIndex="1">
                                        <font>
                                           <Font size="9.0" />
                                        </font>
@@ -187,7 +187,7 @@
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </GridPane.margin>
                                     </Button>
-                                    <Button focusTraversable="false" mnemonicParsing="false" onAction="#equelsPress" prefHeight="45.0" prefWidth="185.0" text="=" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                                    <Button focusTraversable="false" mnemonicParsing="false" onAction="#equalsPress" prefHeight="45.0" prefWidth="185.0" text="=" GridPane.columnIndex="3" GridPane.rowIndex="5">
                                        <font>
                                           <Font size="24.0" />
                                        </font>

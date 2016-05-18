@@ -13,8 +13,8 @@ public class Constants {
 	public static final String BRACKETLEFT = "(";
 	public static final String BRACKETRIGHT = ")";
 	public static final String EKSPANENTA = "e";
-	public static final char CEKSPANENTA = 'e';
-	public static final String NEKSPANENTA = "2.7182";
+	public static final char C_EKSPANENTA = 'e';
+	public static final String N_EKSPANENTA = "2.7182";
 	public static final String POWER = "^";
 	public static final String START_END_FORMULA = "|";
 	public static final char POINT = '.';
@@ -23,7 +23,7 @@ public class Constants {
 	public static final String NEGATIVE = "+/-";
 	public static final String ONE = "1";
 	public static final int TWO = 2;
-	public static final String STWO = "2";
+	public static final String S_TWO = "2";
 	public static final String THREE = "3";
 	public static final String FOUR = "4";
 	public static final String FIVE = "5";
@@ -32,4 +32,7 @@ public class Constants {
 	public static final String EIGHT = "8";
 	public static final String NINE = "9";
 	public static final String ZERO = "0";
+	public static final String RADIO_BUTTON_LOG_LN = "log/ln";
+	public static final String RADIO_BUTTON_POWER = "power";
+	public static final String RADIO_BUTTON_FACTORIAL = "factorial";
 }

@@ -12,16 +12,16 @@ public class Decision {
 	private double result;
 	private History h;
 	
-	public Decision(History h) throws Exception {
+	public Decision(History h) throws Exception {// гавно
 		this.h = h;
 		setRPN();
 	}
 	
-	public void setRPN() throws Exception {
+	public void setRPN() throws Exception { // гавно// гавно
 		decision();
 	}
 	
-	private void decision() throws Exception {
+	private void decision() throws Exception {	// гавно
 		List<MathObject> lmo = h.getRPN();
 		decisionOperator(lmo);
 		if(lmo.size() > 1) {
@@ -30,7 +30,7 @@ public class Decision {
 		result = ((Operand) lmo.get(0)).getOperand();
 	}
 	
-	public static void decisionOperator(List<MathObject> lmo) {
+	public static void decisionOperator(List<MathObject> lmo) {// гавно
 		ListIterator<MathObject> lister = lmo.listIterator();
 		while(lister.hasNext()) {
 			MathObject mo = lister.next();
@@ -52,7 +52,7 @@ public class Decision {
 		}
 	} 
 	
-	public double getResult() {
+	public double getResult() {// гавно
 		return result;
 	}
 }

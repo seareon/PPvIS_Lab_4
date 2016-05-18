@@ -2,6 +2,7 @@ package model;
 
 public class BinaryOperator extends MathObject {
 	private String operator;
+	private double result = 0.0;
 	
 	public BinaryOperator(String str) {
 		operator = str;
@@ -11,8 +12,11 @@ public class BinaryOperator extends MathObject {
 		return operator;
 	}
 	
+	public double getResult() {
+		return result;
+	}
+	
 	public double getResult(double op1, double op2) {
-		double result = 0.0;
 		switch(operator) {
 			case Constants.PLUS:
 				result = op1 + op2;

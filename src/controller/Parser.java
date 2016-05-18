@@ -23,11 +23,11 @@ public class Parser {
 		str += Constants.START_END_FORMULA;
 		String elem = "";
 		for(int indexStr = 0; indexStr < str.length(); indexStr++) {
-			if(Character.isDigit(str.charAt(indexStr)) || str.charAt(indexStr) == Constants.POINT) {
+			if(Operand.isOperand(str.charAt(indexStr) + "")) {
 				elem += str.charAt(indexStr);
 			}
 			else { 
-				if(!elem.equals("")) {
+				if(!"".equals(elem)) {
 					h.setTreeItem(new Operand(elem));
 					elem = "";
 				}
@@ -152,8 +152,8 @@ public class Parser {
 	private int readOperand(String str, int indexStr) throws Exception {
 		int newIndex = -1;
 		switch(str.charAt(indexStr)) {
-			case Constants.CEKSPANENTA:
-				h.setTreeItem(new Operand(Constants.NEKSPANENTA));
+			case Constants.C_EKSPANENTA:
+				h.setTreeItem(new Operand(Constants.N_EKSPANENTA));
 				newIndex = indexStr;
 				break;
 			case Constants.L:
